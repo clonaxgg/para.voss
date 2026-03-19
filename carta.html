@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Vos ❤️</title>
+
+<style>
+    body{
+        margin:0;
+        padding:0;
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        background: linear-gradient(135deg,#ffd1dc,#ffe4e1);
+        font-family: 'Georgia', serif;
+        overflow:hidden;
+    }
+
+    .carta{
+        width:90%;
+        max-width:420px;
+        background:#fffaf0;
+        padding:25px;
+        border-radius:12px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.15);
+        position:relative;
+        z-index:2;
+        animation:aparecer 1.5s ease;
+    }
+
+    h1{
+        text-align:center;
+        margin-top:5px;
+        color:#c9184a;
+    }
+
+    p{
+        color:#b00020;
+        font-size:15px;
+        line-height:1.6;
+        text-align:justify;
+    }
+
+    .pregunta{
+        margin-top:18px;
+        font-size:20px;
+        font-weight:bold;
+        text-align:center;
+        color:#c9184a;
+    }
+
+    .botones{
+        margin-top:18px;
+        position:relative;
+        height:90px;
+    }
+
+    button{
+        padding:10px 18px;
+        font-size:16px;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+        position:absolute;
+    }
+
+    .si{
+        background:#ff4d6d;
+        color:white;
+        left:25%;
+        transform:translateX(-50%);
+    }
+
+    .no{
+        background:#6c757d;
+        color:white;
+        left:70%;
+        transform:translateX(-50%);
+        transition:top .15s, left .15s;
+    }
+
+    .mensaje-final{
+        display:none;
+        margin-top:15px;
+        text-align:center;
+        color:#c9184a;
+        font-weight:bold;
+        animation:aparecer 1s ease;
+    }
+
+    /* Corazones flotando */
+    .corazon{
+        position:fixed;
+        bottom:-20px;
+        font-size:20px;
+        animation:flotar linear forwards;
+        z-index:1;
+        opacity:.8;
+        pointer-events:none;
+    }
+
+    @keyframes flotar{
+        to{
+            transform:translateY(-110vh);
+            opacity:0;
+        }
+    }
+
+    /* Explosión */
+    .boom{
+        position:fixed;
+        font-size:22px;
+        animation:explotar 1s ease-out forwards;
+        pointer-events:none;
+        z-index:3;
+    }
+
+    @keyframes explotar{
+        0%{ transform:translate(0,0) scale(1); opacity:1; }
+        100%{ transform:translate(var(--x), var(--y)) scale(1.8); opacity:0; }
+    }
+
+    @keyframes aparecer{
+        from{opacity:0; transform:translateY(30px);}
+        to{opacity:1; transform:translateY(0);}
+    }
+
+    iframe{
+        position:fixed;
+        width:0;
+        height:0;
+        border:0;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- Música en bucle -->
+<audio id="musica" autoplay loop muted playsinline>
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const musica = document.getElementById("musica");
+
+/* Intenta activar sonido automáticamente */
+window.addEventListener("load", () => {
+  musica.play().catch(()=>{});
+});
+
+/* Primer toque: quitar silencio */
+document.addEventListener("click", () => {
+  musica.muted = false;
+  musica.play();
+}, { once:true });
+</script>
+
+<div class="carta">
+    <h1>💌 Para Vos</h1>
+
+    <p>
+        Hola buenos días, espero tengas un hermoso día como vos, te mando esto porque sé que cada día haces un esfuerzo enorme al soportar mis dramitas, berrinches aunque son poquitos, mis celos, mis boludeces, mis enojos, mis pesadillas y puedo seguir porque son muchos.
+        <br><br>
+        Me gusta cuando me haces tus enojitos, cuando me cuentas tu día a día, lo que comiste, cómo te fue donde tu mami, cuando cuidas a nuestros bebés, cuando me cuidas, me proteges.
+        <br><br>
+        Y me gustaría resolver una dudita que he tenido hace un tiempito y sé que es rápido pero sabes el cariño y la comodidad que me haces sentir cuando estoy con vos, en las llamadas, videollamadas, cuando jugamos.
+        <br><br>
+        Sé que a veces te hago enojar con mis dramitas o mis berrinches. Sabes, solo quiero protegerte, cuidarte, amarte, mimarte y mucho más como te lo mereces, pero aguántame el proceso que quiero un futuro mejor para nosotros.
+        <br><br>
+        Sé que no soy el más detallista o el más cariñoso, sé que mi forma de demostrar cariño aburre y que no soy perfecto, también que tengo muchos defectos, pero este feíto, dramático, berrinchudo, llorón, celoso; le gustas.
+    </p>
+
+    <div class="pregunta">
+        ¿ME DAS LA OPORTUNIDAD DE SER TU NOVIO? ❤️
+    </div>
+
+    <div class="botones" id="zonaBotones">
+        <button class="si" onclick="aceptar(event)">Sí</button>
+        <button class="no" id="btnNo">No</button>
+    </div>
+
+    <div class="mensaje-final" id="final">
+        Sabía que dirías que sí 😍💖
+    </div>
+</div>
+
+<script>
+function aceptar(e){
+    document.getElementById("final").style.display="block";
+    explosion(e.clientX, e.clientY);
+}
+
+/* Explosión de corazones */
+function explosion(x,y){
+    for(let i=0;i<40;i++){
+        const h=document.createElement("div");
+        h.className="boom";
+        h.innerHTML="❤";
+        h.style.left=x+"px";
+        h.style.top=y+"px";
+        const ang=Math.random()*2*Math.PI;
+        const dist=80+Math.random()*120;
+        h.style.setProperty('--x', Math.cos(ang)*dist+'px');
+        h.style.setProperty('--y', Math.sin(ang)*dist+'px');
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(),1000);
+    }
+}
+
+/* NO imposible */
+const btnNo=document.getElementById("btnNo");
+const zona=document.getElementById("zonaBotones");
+
+function moverNo(){
+    const rect=zona.getBoundingClientRect();
+    const x=Math.random()*(rect.width-80);
+    const y=Math.random()*(rect.height-40);
+    btnNo.style.left=x+"px";
+    btnNo.style.top=y+"px";
+}
+btnNo.addEventListener("mouseenter", moverNo);
+btnNo.addEventListener("touchstart", moverNo);
+
+/* Corazones flotando */
+function crearCorazon(){
+    const c=document.createElement("div");
+    c.className="corazon";
+    c.innerHTML="❤";
+    c.style.left=Math.random()*100+"vw";
+    c.style.fontSize=(Math.random()*20+10)+"px";
+    c.style.animationDuration=(Math.random()*3+4)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),7000);
+}
+setInterval(crearCorazon,300);
+</script>
+
+</body>
+</html>
